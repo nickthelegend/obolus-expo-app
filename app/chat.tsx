@@ -21,7 +21,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MessageBubble } from '@/components/chat/MessageBubble';
 import { TypingIndicator } from '@/components/chat/TypingIndicator';
 import { callGroq, getSystemPrompt, parseIntent, Message as GroqMessage } from '@/hooks/useGroqChat';
-import { useAccount as useAppKitAccount } from '@reown/appkit-react-native';
+import { useAccount } from '@reown/appkit-react-native';
 import { usePreferences } from '@/hooks/usePreferences';
 import { API_URL } from '@/constants/Config';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -253,16 +253,10 @@ export default function ChatScreen() {
         <View style={styles.chainSelectorContainer}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chainScroll}>
             {[
-              { id: 16661, name: '0G', logo: 'https://raw.githubusercontent.com/0glabs/0g-chain-registry/main/mainnets/0g/images/0g.png' },
-              { id: 1, name: 'ETH', logo: 'https://icons.llama.fi/chains/rsz_ethereum.jpg' },
-              { id: 8453, name: 'Base', logo: 'https://icons.llama.fi/chains/rsz_base.jpg' },
-              { id: 42161, name: 'Arb', logo: 'https://icons.llama.fi/chains/rsz_arbitrum.jpg' },
-              { id: 137, name: 'Poly', logo: 'https://icons.llama.fi/chains/rsz_polygon.jpg' },
-              { id: 56, name: 'BNB', logo: 'https://icons.llama.fi/chains/rsz_bsc.jpg' },
-              { id: 10, name: 'Op', logo: 'https://icons.llama.fi/chains/rsz_optimism.jpg' },
-              { id: 43114, name: 'Avax', logo: 'https://icons.llama.fi/chains/rsz_avalanche.jpg' },
+              { id: 'solana', name: 'Solana', logo: 'https://icons.llama.fi/chains/rsz_solana.jpg' },
+              { id: 'solana-devnet', name: 'Devnet', logo: 'https://icons.llama.fi/chains/rsz_solana.jpg' },
             ].map((chain) => {
-              const isSelected = preferences.defaultChain === chain.id;
+              const isSelected = preferences.defaultChain === chain.id || (chain.id === 'solana' && !preferences.defaultChain);
               return (
                 <TouchableOpacity 
                   key={chain.id}
@@ -273,7 +267,7 @@ export default function ChatScreen() {
                   onPress={() => updatePreferences({ defaultChain: chain.id })}
                 >
                   <Image source={{ uri: chain.logo }} style={styles.chainLogo} />
-                  <Text style={[styles.chainName, { color: isSelected ? '#FFF' : theme.text }]}>{chain.name}</Text>
+                  <Text style={[styles.chainName, { color: isSelected ? '#000' : theme.text }]}>{chain.name}</Text>
                 </TouchableOpacity>
               );
             })}
@@ -332,9 +326,9 @@ export default function ChatScreen() {
           <View style={[styles.shortcutsContainer, { backgroundColor: theme.card, borderColor: theme.border }]}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               {[
-                { label: 'Hot Tokens', cmd: '/trending' },
+                { label: 'Hot SOL Tokens', cmd: '/trending' },
                 { label: 'My Portfolio', cmd: '/portfolio' },
-                { label: 'Swap ETH', cmd: '/swap eth to usdc' },
+                { label: 'Swap SOL', cmd: '/swap sol to pusd' },
                 { label: 'Top Gainers', cmd: '/gainers' },
                 { label: 'Agent Status', cmd: '/agents' },
               ].map((item, idx) => (

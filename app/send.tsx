@@ -14,8 +14,8 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useAccount, useBalance } from 'wagmi';
-import { Address, parseEther } from 'viem';
+import { useAccount, useBalance } from '@reown/appkit-react-native';
+
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -38,10 +38,7 @@ export default function SendScreen() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
-  const { data: balance } = useBalance({ 
-    address, 
-    chainId: 16661 // 0G Mainnet
-  });
+  const balance = { formatted: '0.00', symbol: 'SOL' };
 
   const handleSend = async () => {
     if (!recipient || !amount) return;
@@ -89,7 +86,7 @@ export default function SendScreen() {
               <View style={styles.inputRow}>
                 <TextInput
                   style={styles.addressInput}
-                  placeholder="0x... or ENS name"
+                  placeholder="Solana Address"
                   placeholderTextColor="rgba(255,255,255,0.1)"
                   value={recipient}
                   onChangeText={setRecipient}
@@ -131,7 +128,7 @@ export default function SendScreen() {
                </View>
                <View style={styles.infoRow}>
                  <Text style={styles.infoLabel}>Network</Text>
-                 <Text style={styles.infoValue}>0G Mainnet</Text>
+                 <Text style={styles.infoValue}>Solana Mainnet</Text>
                </View>
             </Animated.View>
 

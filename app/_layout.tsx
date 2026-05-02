@@ -4,11 +4,11 @@ import {
   AppKit,
   AppKitProvider,
   createAppKit,
+  useAccount,
 } from "@reown/appkit-react-native";
-import { WagmiAdapter } from "@reown/appkit-wagmi-react-native";
+import { SolanaAdapter } from "@reown/appkit-solana-react-native";
+import { solana, solanaTestnet, solanaDevnet } from "@reown/appkit-solana-react-native/networks";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { arbitrum, mainnet, polygon, base, zeroGMainnet, zeroGTestnet, zeroGGalileoTestnet } from "@wagmi/core/chains";
-import { WagmiProvider, useAccount } from "wagmi";
 
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -71,10 +71,9 @@ const metadata = {
   },
 };
 
-const networks = [mainnet, arbitrum, base, polygon, zeroGMainnet, zeroGGalileoTestnet];
+const networks = [solana, solanaTestnet, solanaDevnet];
 
-const wagmiAdapter = new WagmiAdapter({
-  projectId,
+const solanaAdapter = new SolanaAdapter({
   networks,
 });
 
@@ -82,11 +81,11 @@ const wagmiAdapter = new WagmiAdapter({
 const appkit = createAppKit({
   projectId,
   networks,
-  adapters: [wagmiAdapter],
+  adapters: [solanaAdapter],
   metadata,
   clipboardClient,
   storage,
-  defaultNetwork: zeroGMainnet,
+  defaultNetwork: solana,
   enableAnalytics: true,
 });
 
@@ -160,22 +159,20 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <WagmiProvider config={wagmiAdapter.wagmiConfig}>
-          <QueryClientProvider client={queryClient}>
-            <AppKitProvider instance={appkit}>
-              <PreferencesProvider>
-                <ToastProvider>
-                  <RootContent />
-                </ToastProvider>
-              </PreferencesProvider>
-              <StatusBar style="auto" />
-              {/* This is a workaround for the Android modal issue. https://github.com/expo/expo/issues/32991#issuecomment-2489620459 */}
-              <View style={{ position: "absolute", height: "100%", width: "100%" }} pointerEvents="box-none">
-                <AppKit />
-              </View>
-            </AppKitProvider>
-          </QueryClientProvider>
-        </WagmiProvider>
+        <QueryClientProvider client={queryClient}>
+          <AppKitProvider instance={appkit}>
+            <PreferencesProvider>
+              <ToastProvider>
+                <RootContent />
+              </ToastProvider>
+            </PreferencesProvider>
+            <StatusBar style="auto" />
+            {/* This is a workaround for the Android modal issue. https://github.com/expo/expo/issues/32991#issuecomment-2489620459 */}
+            <View style={{ position: "absolute", height: "100%", width: "100%" }} pointerEvents="box-none">
+              <AppKit />
+            </View>
+          </AppKitProvider>
+        </QueryClientProvider>
       </ThemeProvider>
     </GestureHandlerRootView>
   );

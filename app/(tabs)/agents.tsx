@@ -15,8 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useAccount as useAppKitAccount } from '@reown/appkit-react-native';
-import { useBalance, useEnsName } from 'wagmi';
+import { useAccount } from '@reown/appkit-react-native';
 import { API_URL } from '@/constants/Config';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useRouter } from 'expo-router';
@@ -49,8 +48,8 @@ const formatCurrency = (val: number) => {
 export default function AgentsScreen() {
   const colorScheme = useColorScheme() ?? 'dark';
   const theme = Colors[colorScheme];
-  const { address } = useAppKitAccount();
-  const { data: ensName } = useEnsName({ address: address as `0x${string}`, chainId: 1 });
+  const { address } = useAccount();
+  const ensName = null;
   const router = useRouter();
   const insets = useSafeAreaInsets();
 

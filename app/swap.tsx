@@ -14,8 +14,8 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useAccount, useBalance } from 'wagmi';
-import { Address } from 'viem';
+import { useAccount } from '@reown/appkit-react-native';
+
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useSwap } from '@/hooks/useSwap';
@@ -26,9 +26,9 @@ import { Button } from '@/components/ui/Button';
 
 const { width } = Dimensions.get('window');
 
-// Common tokens mapped for 0G Mainnet
-const A0GI = { symbol: 'A0GI', name: '0G Native', address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', decimals: 18 };
-const USDC = { symbol: 'USDC', name: 'USD Coin', address: '0x627d32C41D35284050b168925501867160965383', decimals: 6 }; 
+// Solana Tokens
+const SOL = { symbol: 'SOL', name: 'Solana', address: 'So11111111111111111111111111111111111111112', decimals: 9 };
+const PUSD = { symbol: 'PUSD', name: 'Palm USD', address: 'PUSD_ADDRESS', decimals: 6 }; 
 
 const STEP_LABELS: Record<string, string> = {
   idle: 'Swap',
@@ -53,15 +53,11 @@ export default function SwapScreen() {
   const { getQuote, executeSwap, step, quote, error: swapError, reset } = useSwap();
 
   const [inputAmount, setInputAmount] = useState('');
-  const [tokenIn, setTokenIn] = useState(A0GI);
-  const [tokenOut, setTokenOut] = useState(USDC);
+  const [tokenIn, setTokenIn] = useState(SOL);
+  const [tokenOut, setTokenOut] = useState(PUSD);
   const [isQuotingLocal, setIsQuotingLocal] = useState(false);
 
-  const { data: balanceIn } = useBalance({ 
-    address, 
-    token: tokenIn.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' ? undefined : tokenIn.address as Address,
-    chainId: 16661 // 0G Mainnet
-  });
+  const balanceIn = { formatted: '0.00', symbol: 'SOL' }; // Mock for Solana
 
   useEffect(() => {
     if (!inputAmount || parseFloat(inputAmount) <= 0) {
@@ -128,7 +124,7 @@ export default function SwapScreen() {
             <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
               <Ionicons name="chevron-back" size={24} color="#fff" />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Swap (0G Mainnet)</Text>
+            <Text style={styles.headerTitle}>Swap (Solana)</Text>
             <TouchableOpacity style={styles.settingsBtn}>
               <Ionicons name="options-outline" size={22} color="#A0A0A0" />
             </TouchableOpacity>

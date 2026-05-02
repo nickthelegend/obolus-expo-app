@@ -20,9 +20,8 @@ import Animated, {
   interpolateColor
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useAccount as useAppKitAccount } from '@reown/appkit-react-native';
-import { useBalance, useReadContracts, useEnsName } from 'wagmi';
-import { erc20Abi, formatUnits } from 'viem';
+import { useAccount } from '@reown/appkit-react-native';
+
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -71,7 +70,7 @@ function ActionButton({ label, icon, onPress }: ActionButtonProps) {
 }
 
 function AgentWalletRow({ agent, theme }: { agent: any, theme: any }) {
-  const { data: balance } = useBalance({ address: agent.agentWalletAddress as `0x${string}` });
+  const balance = { formatted: '0.00', symbol: 'SOL' };
   const router = useRouter();
 
   return (
@@ -105,9 +104,10 @@ export default function PortfolioScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   
-  const { address, isConnected } = useAppKitAccount();
-  const { data: nativeBalance, isLoading: isNativeLoading, refetch: refetchBalance } = useBalance({ address: address as `0x${string}` });
-  const { data: ensName } = useEnsName({ address: address as `0x${string}`, chainId: 1 });
+  const { address, isConnected } = useAccount();
+  const nativeBalance = { formatted: '0.00', symbol: 'SOL' };
+  const ensName = null;
+  const refetchBalance = async () => {};
 
   const [activeTab, setActiveTab] = useState('Assets');
   const [portfolioData, setPortfolioData] = useState<any>(null);
@@ -252,10 +252,10 @@ export default function PortfolioScreen() {
               <View style={styles.assetCard}>
                 <View style={styles.tokenRow}>
                   <View style={[styles.tokenIcon, { backgroundColor: `${theme.primary}22` }]}>
-                    <Text style={styles.tokenIconText}>E</Text>
+                    <Text style={styles.tokenIconText}>S</Text>
                   </View>
                   <View style={styles.tokenInfo}>
-                    <Text style={styles.tokenSymbol}>ETH</Text>
+                    <Text style={styles.tokenSymbol}>SOL</Text>
                     <Text style={styles.tokenAmount}>{nativeBalance ? parseFloat(nativeBalance.formatted).toFixed(4) : '0.0000'} tokens</Text>
                   </View>
                   <View style={styles.tokenValues}>
@@ -323,7 +323,7 @@ export default function PortfolioScreen() {
             <Text style={styles.addressText}>{address}</Text>
             <Ionicons name="copy-outline" size={20} color={theme.primary} />
           </TouchableOpacity>
-          <Text style={styles.qrDesc}>Scan this address to send ETH or ERC20 tokens to your Obolus wallet.</Text>
+          <Text style={styles.qrDesc}>Scan this address to send SOL or Solana tokens to your Obolus wallet.</Text>
           <TouchableOpacity style={[styles.closeBtn, { backgroundColor: theme.primary }]} onPress={() => setReceiveVisible(false)}>
             <Text style={styles.closeBtnText}>Done</Text>
           </TouchableOpacity>

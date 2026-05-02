@@ -20,12 +20,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useAccount as useAppKitAccount } from '@reown/appkit-react-native';
-import { useBalance, useEnsName } from 'wagmi';
+import { useAccount } from '@reown/appkit-react-native';
 import { API_URL } from '@/constants/Config';
 import { useRouter, Stack } from 'expo-router';
-import { useEnsSubdomain } from '@/hooks/useEnsSubdomain';
-import { EnsPaymentSheet } from '@/components/EnsPaymentSheet';
 import { useDebounce } from 'use-debounce';
 
 const { width } = Dimensions.get('window');
@@ -43,12 +40,10 @@ export default function NewAgentScreen() {
   const colorScheme = useColorScheme() ?? 'dark';
   const theme = Colors[colorScheme];
   const router = useRouter();
-  const { address } = useAppKitAccount();
-  const { data: balance } = useBalance({ address: address as `0x${string}` });
-  const { data: userEns } = useEnsName({ address: address as `0x${string}`, chainId: 1 });
-  const { checkAvailability, registerSubdomain } = useEnsSubdomain();
-
-  const ensParent = userEns ? userEns.replace('.eth', '') : null;
+  const { address } = useAccount();
+  const balance = { formatted: '0.00', symbol: 'PUSD' };
+  const userEns = null;
+  const ensParent = null;
 
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,7 +60,7 @@ export default function NewAgentScreen() {
   const [funding, setFunding] = useState('');
   const [riskLevel, setRiskLevel] = useState(5);
   const [maxPositionPct, setMaxPositionPct] = useState(10);
-  const [tradingPairs, setTradingPairs] = useState(['ETH/USDC', 'BTC/USDC']);
+  const [tradingPairs, setTradingPairs] = useState(['SOL/PUSD', 'BONK/PUSD']);
   const [predictionTopics, setPredictionTopics] = useState(['Crypto', 'Politics']);
 
   // ENS Payment State
@@ -111,23 +106,7 @@ export default function NewAgentScreen() {
     console.log('[NewAgent] Component mounted. Address:', address);
   }, []);
 
-  React.useEffect(() => {
-    if (debouncedDomain) {
-      console.log('[NewAgent] Checking ENS availability for:', debouncedDomain);
-      setCheckingEns(true);
-      checkAvailability(debouncedDomain)
-        .then((available) => {
-          console.log('[NewAgent] ENS availability result:', available);
-          setEnsAvailable(available);
-        })
-        .catch((err) => {
-          console.error('[NewAgent] ENS availability error:', err);
-        })
-        .finally(() => setCheckingEns(false));
-    } else {
-      setEnsAvailable(null);
-    }
-  }, [debouncedDomain, checkAvailability]);
+  // ENS checks removed for Solana rebrand
 
   const validateEnsSub = (value: string) => {
     const slug = value.toLowerCase().replace(/[^a-z0-9-]/g, '');
@@ -491,7 +470,7 @@ export default function NewAgentScreen() {
             <Text style={styles.sectionTitle}>Configuration</Text>
             
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Fund Agent Wallet (USDC)</Text>
+              <Text style={styles.label}>Fund Agent Wallet (PUSD)</Text>
               <TextInput
                 style={styles.input}
                 placeholder="0.00"
@@ -500,7 +479,7 @@ export default function NewAgentScreen() {
                 value={funding}
                 onChangeText={setFunding}
               />
-              <Text style={styles.helperText}>Available: {balance ? parseFloat(balance.formatted).toFixed(2) : '0.00'} USDC</Text>
+              <Text style={styles.helperText}>Available: {balance ? balance.formatted : '0.00'} PUSD</Text>
             </View>
 
             {marketType === 'tokens' ? (
@@ -557,7 +536,7 @@ export default function NewAgentScreen() {
               </View>
               <View style={styles.reviewRow}>
                 <Text style={styles.reviewLabel}>Initial Funding</Text>
-                <Text style={styles.reviewValue}>{funding} USDC</Text>
+                <Text style={styles.reviewValue}>{funding} PUSD</Text>
               </View>
             </View>
           </ScrollView>
@@ -624,23 +603,7 @@ export default function NewAgentScreen() {
         </View>
       </Animated.View>
 
-      <EnsPaymentSheet
-        isVisible={paymentVisible}
-        fullDomain={fullEnsDomain!}
-        agentWalletAddress="0x..." // placeholder, handled in flow
-        durationYears={selectedDuration}
-        priceEth="0"
-        ethUsdPrice={2400} // Mock price
-        onConfirm={() => {
-          setPaymentVisible(false);
-          handleEnsPayAndCreateAgent();
-        }}
-        onSkip={() => {
-          setPaymentVisible(false);
-          handleSubmit();
-        }}
-        onClose={() => setPaymentVisible(false)}
-      />
+      {/* ENS Payment Sheet removed for Solana rebrand */}
 
       {/* Loading Overlay */}
       {isSubmitting && (

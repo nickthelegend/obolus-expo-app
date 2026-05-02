@@ -17,8 +17,8 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown, SlideInRight, useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
-import { useAccount as useAppKitAccount } from '@reown/appkit-react-native';
-import { useBalance, useEnsName } from 'wagmi';
+import { useAccount } from '@reown/appkit-react-native';
+// Solana balance logic will be implemented via SolanaAdapter or @solana/web3.js
 import { API_URL } from '@/constants/Config';
 import { ModernLineChart } from '@/components/charts/modern-line-chart';
 
@@ -67,9 +67,11 @@ export default function HomeScreen() {
   const theme = Colors[colorScheme];
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { address } = useAppKitAccount();
-  const { data: balance, isLoading: isBalanceLoading, refetch: refetchBalance } = useBalance({ address: address as `0x${string}` });
-  const { data: ensName } = useEnsName({ address: address as `0x${string}`, chainId: 1 });
+  const { address } = useAccount();
+  const ensName = null; // ENS is Ethereum only
+  const balance = { formatted: '0.00', symbol: 'SOL' }; // Mock for now
+  const isBalanceLoading = false;
+  const refetchBalance = async () => {};
   
   const [agents, setAgents] = useState([]);
   const [notifications, setNotifications] = useState([

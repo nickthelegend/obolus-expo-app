@@ -12,8 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAccount as useAppKitAccount, useAppKit } from '@reown/appkit-react-native';
-import { useDisconnect, useEnsName } from 'wagmi';
+import { useAccount, useAppKit, useDisconnect } from '@reown/appkit-react-native';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useRouter } from 'expo-router';
@@ -21,8 +20,8 @@ import { useRouter } from 'expo-router';
 export default function ProfileScreen() {
   const colorScheme = useColorScheme() ?? 'dark';
   const theme = Colors[colorScheme];
-  const { address, isConnected } = useAppKitAccount();
-  const { data: ensName } = useEnsName({ address: address as `0x${string}`, chainId: 1 });
+  const { address, isConnected } = useAccount();
+  const ensName = null;
   const { open } = useAppKit();
   const { disconnect } = useDisconnect();
   const router = useRouter();

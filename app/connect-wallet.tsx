@@ -7,8 +7,7 @@ import {
   SafeAreaView, 
   TouchableOpacity 
 } from 'react-native';
-import { useAppKit } from '@reown/appkit-react-native';
-import { useAccount } from 'wagmi';
+import { useAppKit, useAccount } from '@reown/appkit-react-native';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
@@ -83,7 +82,7 @@ export default function ConnectWalletScreen() {
 
         <Text style={[styles.title, { color: theme.text }]}>Connect Your Wallet</Text>
         <Text style={[styles.subtext, { color: '#A0A0A0' }]}>
-          Link your EVM or Solana wallet to access your AI agents, prediction markets, and portfolio.
+          Link your Solana wallet to access your private inflows, instant advances, and automated bill pay.
         </Text>
 
         <Button 
